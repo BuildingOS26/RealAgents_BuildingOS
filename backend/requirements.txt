@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic
+supabase
+python-dotenv
+openai
+firebase-admin
+resend
+pyiceberg
+pyarrow
+pdfplumber
+httpx
