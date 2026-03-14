@@ -1266,10 +1266,21 @@ import resend
 # Initialize Firebase Admin
 firebase_initialized = False
 try:
-    cred = credentials.Certificate("firebase-service-account.json")
-    firebase_admin.initialize_app(cred)
-    firebase_initialized = True
-    print("Firebase Admin SDK initialized")
+    # Try loading from environment variable first (for Railway/production)
+    firebase_cred_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+    if firebase_cred_json:
+        import json
+        cred_dict = json.loads(firebase_cred_json)
+        cred = credentials.Certificate(cred_dict)
+        firebase_admin.initialize_app(cred)
+        firebase_initialized = True
+        print("Firebase Admin SDK initialized from environment variable")
+    else:
+        # Fall back to file (for local development)
+        cred = credentials.Certificate("firebase-service-account.json")
+        firebase_admin.initialize_app(cred)
+        firebase_initialized = True
+        print("Firebase Admin SDK initialized from file")
 except Exception as e:
     print(f"Warning: Firebase Admin initialization failed: {e}")
 
