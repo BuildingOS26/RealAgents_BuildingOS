@@ -1,8 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { API_URL } from './api';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://lxlrwiltjwfbvjkhsgis.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4bHJ3aWx0andmYnZqa2hzZ2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNjgzNzMsImV4cCI6MjA4MTY0NDM3M30.eHITmkmsFqKl7dtrVwy9rOyANHmP13Jky2X-TGNZaek';
+
+console.log('Supabase URL:', SUPABASE_URL ? 'Set' : 'Not set');
+console.log('Supabase Key:', SUPABASE_ANON_KEY ? 'Set' : 'Not set');
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
