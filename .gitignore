@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+node_modules/
+dist/
+.DS_Store
+.vscode/
+.vercel
+firebase-service-account.json
+firebase-service-account.json.bak
+backend/.env
+frontend/.env
