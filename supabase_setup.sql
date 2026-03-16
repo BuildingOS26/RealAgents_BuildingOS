@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS public.invites (
 
 -- 4. Create Building table
 CREATE TABLE IF NOT EXISTS public."Building" (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
     name TEXT NOT NULL,
     address TEXT NOT NULL,
     city TEXT,
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS public."File" (
 -- 6. Create Documents table (newer structure used by RAG)
 CREATE TABLE IF NOT EXISTS public."Documents" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    building_id UUID REFERENCES public."Building"(id) ON DELETE CASCADE,
+    building_id TEXT REFERENCES public."Building"(id) ON DELETE CASCADE,
     category document_category,
     filename TEXT NOT NULL,
     s3_key TEXT NOT NULL UNIQUE,
