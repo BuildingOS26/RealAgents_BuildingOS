@@ -64,20 +64,34 @@ def init_supabase_client():
 supabase = init_supabase_client()
 
 # ===== SUPABASE ANALYTICS (ICEBERG) INITIALIZATION =====
-PROJECT_REF = os.getenv("ICEBERG_PROJECT_REF", "dummy_ref")
+# Support both legacy ICEBERG_* names and the SUPABASE_* names used in Railway.
+PROJECT_REF = os.getenv("ICEBERG_PROJECT_REF") or os.getenv("SUPABASE_PROJECT_REF")
 WAREHOUSE = "test"
-TOKEN = os.getenv("ICEBERG_TOKEN", "dummy_token")
-S3_ACCESS_KEY = os.getenv("ICEBERG_S3_ACCESS_KEY", "dummy_access_key")
-S3_SECRET_KEY = os.getenv("ICEBERG_S3_SECRET_KEY", "dummy_secret_key")
+TOKEN = os.getenv("ICEBERG_TOKEN") or os.getenv("SUPABASE_ICEBERG_TOKEN")
+S3_ACCESS_KEY = os.getenv("ICEBERG_S3_ACCESS_KEY") or os.getenv("SUPABASE_S3_ACCESS_KEY")
+S3_SECRET_KEY = os.getenv("ICEBERG_S3_SECRET_KEY") or os.getenv("SUPABASE_S3_SECRET_KEY")
 S3_REGION = "us-west-2"
-S3_ENDPOINT = f"https://{PROJECT_REF}.storage.supabase.co/storage/v1/s3"
-CATALOG_URI = f"https://{PROJECT_REF}.storage.supabase.co/storage/v1/iceberg"
+S3_ENDPOINT = f"https://{PROJECT_REF}.storage.supabase.co/storage/v1/s3" if PROJECT_REF else None
+CATALOG_URI = f"https://{PROJECT_REF}.storage.supabase.co/storage/v1/iceberg" if PROJECT_REF else None
 
 iceberg_catalog = None
 iceberg_table = None
 
 def init_iceberg():
     global iceberg_catalog, iceberg_table
+    missing_vars = [
+        name for name, value in {
+            "PROJECT_REF": PROJECT_REF,
+            "TOKEN": TOKEN,
+            "S3_ACCESS_KEY": S3_ACCESS_KEY,
+            "S3_SECRET_KEY": S3_SECRET_KEY,
+        }.items() if not value
+    ]
+
+    if missing_vars:
+        print(f"Skipping Iceberg initialization; missing env vars: {', '.join(missing_vars)}")
+        return
+
     try:
         print("Initializing Iceberg REST Catalog...")
         iceberg_catalog = load_catalog(
